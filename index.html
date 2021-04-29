@@ -1,0 +1,263 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="css/index.css"></link>
+    <link rel="stylesheet" href="css/clocks.css"></link>
+    <link rel="stylesheet" href="css/networks.css"></link>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1 user-scalable=no">
+
+    <meta name="description" content="Heapwolf Blog">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hx.ht/">
+    <meta property="og:site_name" content="Heapwolf">
+    <meta property="og:title" content="Heapwolf Blog">
+    <meta property="og:description" content="Distributed Systems, Programming, and Recipes">
+    <meta property="og:image" content="https://avatars2.githubusercontent.com/u/136109">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@heapwolf">
+    <meta name="twitter:title" content="Distributed Systems, Programming, and Recipes">
+    <meta name="twitter:image" content="https://avatars2.githubusercontent.com/u/136109">
+  <body>
+
+    <header>
+      <h1>Heapwolf</h1>
+    </header>
+
+    <main>
+      <article>
+        <a id="cxx-modules" href="#cxx-modules" class="title">
+          <h2>C++20 Modules</h2>
+        </a>
+        <time>2021-04-29</time>
+        <p>
+          I started digging into <b>C++ 20 Modules</b>.
+          If you're not familar,
+          <a href="https://meetingcpp.com/mcpp/slides/2019/modules-the-beginners-guide-meetingcpp2019.pdf">here</a>
+          is a good introduction.
+          Compared to other languages like Rust, I found official references and examples sparse or <a href="https://en.cppreference.com/w/cpp/language/modules">incomplete</a>.
+          Microsoft has a <a href="https://docs.microsoft.com/en-us/cpp/cpp/modules-cpp?view=msvc-160">short intro</a>. I found these 
+          <a href="https://vector-of-bool.github.io/2019/03/10/modules-1.html">Vector of Bool</a>
+          posts insightful, although the writer has seemed to receive C++ Modules with a <a href="https://vector-of-bool.github.io/2019/01/27/modules-doa.html">high degree of criticism</a>.
+          I find the <a href="https://clang.llvm.org/docs/Modules.html">Clang docs</a> unclear about a
+          number of important things. Things are slightly different with <a href="https://gcc.gnu.org/wiki/cxx-modules">GCC</a>.
+        <p>
+          First of all, with Clang 12, you need to opt-in to modules with <code>-fmodules</code>. I'm not sure why
+          <code>-Xclang -emit-module-interface</code> is a front-end option still. It seems obscure,
+          you can only find it from running <code>clang -cc1 --help</code>. But you need it because you're expected to
+          precompile the module (I made a gist that demonstrates the work flow). Then when you build the
+          file that imports the module, you need to specify where the prebuilt module is located.
+        <p>
+          It's awkward that the compiler wants to know the module names. Your compiled module's file name
+          must match the module name or you can provide a special flag that maps the module name to an arbitrary file
+          (ie <code>-fmodule-file=name=./file.pcm</code>).
+
+        <script src="https://gist.github.com/heapwolf/5a33659fd65c0bbe7bc43baa2c362b86.js"></script>
+
+        <p>
+        C++ Modules are literally an after-thought, and they have the <b>DX</b> of one. They get
+          a lot more complex than this, I will spare you the rather painful details. Honestly,
+          I'm not sure if they're going to appeal to anyone who's got a large C++ codebase.
+          But for new projects they seem to be an improvement.
+      </article>
+
+
+
+
+      <article>
+        <a id="falsifiability" href="#falsifiability" class="title">
+          <h2>Falsifiability</h2>
+        </a>
+        <time>2020-11-06</time>
+        <p>
+          In his 1934 book entited <b>Logik der Forschung</b>,
+          <a href="https://en.wikipedia.org/wiki/Karl_Popper">Karl Popper</a> argued for
+          <b>falsifiability</b> over verifiability.
+
+        <blockquote>
+          Verifying the claim "All swans are white" would require assessment of all swans,
+          which is not possible, the single observation of a black swan is sufficient to falsify it.
+          <cite>
+            Citation &mdash; <a href="https://en.wikipedia.org/wiki/Falsifiability#cite_note-blackswanimpossible-1">Falsifiability</a>
+          </cite>
+        </blockquote>
+      </article>
+
+      <article>
+        <a id="small-world-networks" href="#small-world-networks" class="title">
+          <h2>Small-world networks</h2>
+        </a>
+        <time>2020-05-31</time>
+        <p>
+          The <a href="http://worrydream.com/refs/Watts-CollectiveDynamicsOfSmallWorldNetworks.pdf">Watts-Strogatz</a> model of the <a href="https://en.wikipedia.org/wiki/Small-world_network">small-world network</a>
+          have a large <a href="https://en.wikipedia.org/wiki/Clustering_coefficient">clustering coefficient</a>
+          and paths from node a to b that are on average short.
+        <p>
+          This means the typical number of steps between two randomly chosen nodes grows
+          proportionally to the logarithm of the number of nodes in the network. The simplicity
+          of this approach makes it a nice starting point for decentralized search.
+        <p>
+        <blockquote>
+          "It is possible to prove that in the model of a d-dimensional lattice with uniformly
+          random shortcuts, no decentralized algorithm can find short paths [...]. Exploring
+          further, though, we find that a subtle variant of the Watts-Strogatz network
+          will in fact support efficient search: Rather than adding the long-range shortcuts
+          uniformly at random, we add links between nodes of this network with a probability that
+          decays like the dth power of their distance (in d dimensions)."
+          <cite>
+            Jon Kleinberg &mdash; <a href="http://mathaware.org/mam/04/essays/smallworld.pdf">The Small-World Phenomenon and Decentralized Search</a>
+          </cite>
+        </blockquote>
+        <p>
+        <!-- Pelechrinis explores the <a href="https://www.pitt.edu/~kpele/distributed_net_search.html#comments">uniformity of distribution</a>
+          in Kleinberg's model. But instead of geographic distribution, we should consider latency.
+        <p>
+          How many nodes in how many clusters need to be traversed to find a subset of randomly seeded nodes.
+          And do randomly connected clusters provide better than 
+
+          Given <b id="replication-value">40</b>% replication across <b id="cluster-value">8</b> nodes in <b id="clusters-value">4</b> clusters with
+          an average connection latency of <b id="nv-latency">40</b>ms. A query may find a match in <b id="nv-time">62</b>ms.
+
+          <div class="grid" id="network-simulation">
+            <canvas id="networks-canvas" width="250px" height="250px"></canvas>
+            <div class="network-values">
+              <div>
+                <input type="range" min="1" max="16" value="4" id="clusters-control">
+                <label>Clusters</label>
+              </div>
+
+              <div>
+                <input type="range" min="2" max="128" value="8" id="cluster-control">
+                <label>Cluster Size</label>
+              </div>
+
+              <div>
+                <input type="range" min="0" max="101" value="5" id="connection-randomization">
+                <label>Randomization (%)</label>
+              </div>
+
+              <div>
+                <input type="range" min="0" max="101" value="0" id="node-failure">
+                <label>Node Failure (%)</label>
+              </div>
+
+              <div>
+                <input type="range" min="1" max="100" value="40" id="connection-latency">
+                <label>Avg. Latency (ms)</label>
+              </div>
+
+              <div>
+                <input type="range" min="1" max="100" value="20" id="replication-control">
+                <label>Replication (%)</label>
+              </div>
+            </div>
+          </div>
+        -->
+
+        <!-- https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.137.5675&rep=rep1&type=pdf -->
+        <!-- https://wwnorton.com/books/9780393325423 -->
+      </article>
+
+      <article>
+        <a id="a-blockchain-is-just-a-list" href="#a-blockchain-is-just-a-list" class="title">
+          <h2>A blockchain is just a data structure</h2>
+        </a>
+        <time>2020-05-30</time>
+        <p>
+          It has no moving parts. It's just a list of items. And each item has
+          some properties. The defining characteristics though, are that each
+          item has 1. a property that acts like a finger print, and 2. a property
+          that points to the item that came before it. A secure
+          <a href="https://en.wikipedia.org/wiki/Cryptographic_hash_function">hash</a>
+          function creates the finger print using the item's properties as input.
+          A correct and complete blockchain can be implemented in fewer than 50 lines
+          of code.
+        <p>
+          A blockchain is most likely the least interesting part of any system that
+          is built with one. <b>Networking</b>, <b>consensus</b> and <b>replication</b>,
+          for example, are discrete and non-trivial problem domains that can form a
+          foundation for maing a blockchain useful.
+      </article>
+
+      <article>
+        <a id="cut-and-paste-cults" href="#cut-and-paste-cults" class="title">
+          <h2>Cut And Paste Cults</h2>
+        </a>
+        <time>2020-05-27</time>
+        <p>
+          The most remarkable feature of most frameworks is their ability to manage mediocre developers.
+      </article>
+
+      <article>
+        <a id="min" href="#min" class="title">
+          <h2>On Minimalism</h2>
+        </a>
+        <time>2020-05-01</time>
+        <p>
+          Constraints provide meaning.
+      </article>
+
+      <article>
+        <a id="min" href="#min" class="title">
+          <h2>Clocks</h2>
+        </a>
+        <time>2020-04-02</time>
+        <p>
+          Some papers on logical and vector clocks.
+        <div class="clock-timeline">
+          <a href="https://amturing.acm.org/p558-lamport.pdf" class="item">
+            <span class="title">Lamport Timestamp</span>
+            <span class="year">1978</span>
+          </a>
+          <a href="https://zoo.cs.yale.edu/classes/cs422/2013/bib/parker83detection.pdf" class="item">
+            <span class="title">Version Vector</span>
+            <span class="year">1983</span>
+          </a>
+          <a href="https://zoo.cs.yale.edu/classes/cs426/2012/lab/bib/fidge88timestamps.pdf" class="item">
+            <span class="title">Vector Clock</span>
+            <span class="year">1988</span>
+          </a>
+          <a href="https://www.researchgate.net/publication/221233664_Bounded_Version_Vectors" class="item">
+            <span class="title">Bound Version Vector</span>
+            <span class="year">2004</span>
+          </a>
+          <a href="http://gsd.di.uminho.pt/members/cbm/ps/itc2008.pdf" class="item">
+            <span class="title">Interval Tree Clock</span>
+            <span class="year">2008</span>
+          </a>
+          <a href="https://arxiv.org/pdf/1011.5808.pdf" class="item">
+            <span class="title">Dotted Version Vectors</span>
+            <span class="year">2010</span>
+          </a>
+        </div>
+      </article>
+
+      <article>
+        <a id="min" href="#min" class="title">
+          <h2>Lamport Timestamps</h2>
+        </a>
+        <time>2020-03-01</time>
+        <p>
+          Interactive logical timestamps.
+        <div id="lamport-timestamp">
+          <div id="timeline-node-a" class="timeline"></div>
+          <div id="timeline-node-b" class="timeline"></div>
+        </div>
+
+        <div id="node-event-links">
+          <a href="#" data-name="a">Fire node A</a>
+          <a href="#" data-name="b">Fire node B</a>
+        </div>
+      </article>
+
+    </main>
+    <footer>
+      <ul>
+        <li><a href="cv.html">CV</a></li>
+        <li><a href="https://github.com/heapwolf">Github</a></li>
+        <li><a href="https://twitter.com/heapwolf">Twitter</a></li>
+      </ul>
+    </footer>
+
+    <script src="js/timestamps.js"></script>
+    <script src="js/networks.js"></script>
