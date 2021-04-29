@@ -7,9 +7,6 @@
     "build": "npm test && node ./bin/build.js && npm run build:js && npm run build:styl",
     "build:js": "browserify ./docs/index.js > ./docs/bundle.js",
     "build:styl": "stylus ./src/styles/index.styl -o ./docs/css",
-    "deploy": "npm run build && npm run bucket:sync && npm run bucket:invalidate",
-    "bucket:sync": "aws s3 sync . s3://hxht --delete",
-    "bucket:invalidate": "aws cloudfront create-invalidation --distribution-id E3UG3GDNGCJ4N3 --paths '/*'",
     "test": "standard"
   },
   "author": "Paolo Fragomeni <hello@heapwolf.com>",
